@@ -1,0 +1,6 @@
+---
+cisco:
+  username: cisco
+  # password: cisco
+  platform: ios
+  data: {}
