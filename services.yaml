@@ -1,5 +1,5 @@
 ---
-vrfs:
+services:
   - name: "CustA"
     id: 10
     description: "Customer A"
