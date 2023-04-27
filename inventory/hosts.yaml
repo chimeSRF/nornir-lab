@@ -1,1 +1,40 @@
 ---
+ubuntu:
+  hostname: 10.18.11.176
+  platform: linux
+  groups:
+    - linux
+E1:
+  hostname: 10.18.10.88
+  groups:
+    - router
+    - edge
+    - sideA
+E2:
+  hostname: 10.18.10.22
+  groups:
+    - router
+    - edge
+    - sideA
+E3:
+  hostname: 10.18.10.73
+  groups:
+    - router
+    - edge
+    - sideB
+E4:
+  hostname: 10.18.10.138
+  groups:
+    - router
+    - edge
+    - sideC
+C1:
+  hostname: 10.18.10.3
+  groups:
+    - router
+    - core
+C2:
+  hostname: 10.18.10.25
+  groups:
+    - router
+    - core

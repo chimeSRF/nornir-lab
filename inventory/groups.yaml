@@ -1,6 +1,19 @@
 ---
-cisco:
+linux:
+  username: ins
+  password: ins@lab
+router:
   username: cisco
-  # password: cisco
+  password: cisco
+  platform: ios
+  data: {}
+edge:
+  username: cisco
+  password: cisco
+  platform: ios
+  data: {}
+core:
+  username: cisco
+  password: cisco
   platform: ios
   data: {}
