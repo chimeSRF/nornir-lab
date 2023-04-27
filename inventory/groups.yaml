@@ -8,12 +8,12 @@ router:
   platform: ios
   data: {}
 edge:
-  username: cisco
-  password: cisco
-  platform: ios
   data: {}
 core:
-  username: cisco
-  password: cisco
-  platform: ios
+  data: {}
+sideA:
+  data: {}
+sideB:
+  data: {}
+sideC:
   data: {}
