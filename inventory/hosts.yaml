@@ -7,19 +7,25 @@ E1:
   data:
     vrf:
       - vrf_name: CustA
-        rd: 111.111.111.111:10
+        rd: 192.168.69.69:10
         export: 10:0
         import: 10:0
-      - vrf_name: CustZ
-        rd: 111.111.111.222:10
-        export: 10:0
-        import: 10:0
+      - vrf_name: CustB
+        rd: 192.168.42.42:20
+        export: 20:0
+        import: 20:0
     interfaces:
+      - int_name: GigabitEthernet4.10
+        vlan_id: 10
+        vrf_forwarding: CustA
+        ip_address: 192.168.1.1 255.255.255.0
+        secondary_ip_address: 192.168.1.42
+        priority: 110
       - int_name: GigabitEthernet4.20
         vlan_id: 20
-        vrf_forwarding: CustA
-        ip_address: 192.168.1.69 255.255.255.0
-        secondary_ip_address: 192.168.1.42
+        vrf_forwarding: CustB
+        ip_address: 192.168.21.2 255.255.255.0
+        secondary_ip_address: 192.168.21.42
         priority: 110
     bgp:
       - vrf_name: CustA
@@ -33,27 +39,73 @@ E2:
   groups:
     - router
   data:
+    data:
     vrf:
-      - vrf_name: vrf2
-        rd: 111.111.111.112:10
+      - vrf_name: CustA
+        rd: 192.168.69.69:10
         export: 10:0
         import: 10:0
-      - vrf_name: vrf3
-        rd: 111.111.111.223:10
+      - vrf_name: CustB
+        rd: 192.168.42.42:20
+        export: 20:0
+        import: 20:0
+    interfaces:
+      - int_name: GigabitEthernet4.10
+        vlan_id: 10
+        vrf_forwarding: CustA
+        ip_address: 192.168.1.1 255.255.255.0
+        secondary_ip_address: 192.168.1.42
+        priority: 110
+      - int_name: GigabitEthernet4.20
+        vlan_id: 20
+        vrf_forwarding: CustB
+        ip_address: 192.168.21.2 255.255.255.0
+        secondary_ip_address: 192.168.21.42
+        priority: 110
+    bgp:
+      - vrf_name: CustA
+        asn: 65000
+      - vrf_name: CustB
+        asn: 65000
+E3:
+  hostname: 10.18.10.73
+  loopback: 100.64.1.3
+  groups:
+    - router
+  data:
+    vrf:
+      - vrf_name: CustA
+        rd: 192.168.69.69:10
         export: 10:0
         import: 10:0
-      - vrf_name: vrf4
-        rd: 111.111.234.223:10
+    interfaces:
+      - int_name: GigabitEthernet4
+        vlan_id: 10
+        vrf_forwarding: CustA
+        ip_address: 192.168.2.1 255.255.255.0
+        secondary_ip_address: 192.168.1.43
+        priority: 110
+    bgp:
+      - vrf_name: CustA
+        asn: 65000
+E4:
+  hostname: 10.18.10.138
+  loopback: 100.64.1.4
+  groups:
+    - router
+  data:
+    vrf:
+      - vrf_name: CustA
+        rd: 192.168.69.69:10
         export: 10:0
-#E3:
-#  hostname: 10.18.10.73
-#  loopback: 100.64.1.3
-#  groups:
-#    - router
-#  data: {}
-#E4:
-#  hostname: 10.18.10.138
-#  loopback: 100.64.1.4
-#  groups:
-#    - router
-#  data: {}
+        import: 10:0
+    interfaces:
+      - int_name: GigabitEthernet4
+        vlan_id: 10
+        vrf_forwarding: CustA
+        ip_address: 192.168.3.1 255.255.255.0
+        secondary_ip_address: 192.168.1.44
+        priority: 110
+    bgp:
+      - vrf_name: CustA
+        asn: 65000
