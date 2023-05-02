@@ -6,32 +6,26 @@ from nornir_utils.plugins.functions import print_title, print_result
 nr = InitNornir(config_file="config.yaml", dry_run=True)
 
 def vrf_configuration(task):
-    # Transform inventory data to configuration via a template file
     r = task.run(task=template_file,
                  name="VRF Configuration",
                  template="vrf.j2",
                  path=f"templates/")
 
-    # Save the compiled configuration into a host variable
     task.host["config"] = r.result
 
-    # Deploy that configuration to the device using NAPALM
     task.run(task=napalm_configure,
              name="Loading VRF Configurations on the device",
              replace=False,
              configuration=task.host["config"])
 
 def interface_configuration(task):
-    # Transform inventory data to configuration via a template file
     r = task.run(task=template_file,
                  name="Interface Configuration",
                  template="interfaces.j2",
                  path=f"templates/")
 
-    # Save the compiled configuration into a host variable
     task.host["config"] = r.result
 
-    # Deploy that configuration to the device using NAPALM
     if task.host["config"]:
         task.run(task=napalm_configure,
                 name="Loading Interface Configurations on the device",
@@ -39,16 +33,13 @@ def interface_configuration(task):
                 configuration=task.host["config"])
 
 def bgp_configuration(task):
-    # Transform inventory data to configuration via a template file
     r = task.run(task=template_file,
                  name="BGP Configuration",
                  template="bgp.j2",
                  path=f"templates/")
 
-    # Save the compiled configuration into a host variable
     task.host["config"] = r.result
 
-    # Deploy that configuration to the device using NAPALM
     if task.host["config"]:
         task.run(task=napalm_configure,
                 name="Loading Interface Configurations on the device",
