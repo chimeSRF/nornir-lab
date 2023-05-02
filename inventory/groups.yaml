@@ -9,8 +9,6 @@ router:
   data: {}
 edge:
   data: {}
-core:
-  data: {}
 sideA:
   data: {}
 sideB:
