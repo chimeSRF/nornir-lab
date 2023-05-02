@@ -2,7 +2,7 @@
 {% for interfaces_item in host['data']['interfaces'] %}
 {% if interfaces_item['int_name'] is defined %}
 interface {{ interfaces_item['int_name'] }}
-{% if interfaces_item['vlan_id'] is defined %}
+{% if '.' in interfaces_item['int_name'] %}
 encapsulation dot1Q {{ interfaces_item['vlan_id'] }}
 {% if interfaces_item['secondary_ip_address'] is defined %}
 standby {{ interfaces_item['vlan_id'] }} ip {{ interfaces_item['secondary_ip_address'] }}
