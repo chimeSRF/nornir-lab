@@ -1,0 +1,18 @@
+{% if host['data']['vrf'] %}
+{% for vrf_item in host['data']['vrf'] %}
+{% if vrf_item['vrf_name'] is defined %}
+vrf definition {{ vrf_item['vrf_name'] }}
+{% if vrf_item['rd'] is defined %}
+rd {{ vrf_item['rd'] }}
+{% endif %}
+{% if vrf_item['export'] is defined %}
+route-target export {{ vrf_item['export'] }}
+{% endif %}
+{% if vrf_item['import'] is defined %}
+route-target import {{ vrf_item['import'] }}
+{% endif %}
+address-family ipv4
+exit-address-family
+{% endif %}
+{% endfor %}
+{% endif %}

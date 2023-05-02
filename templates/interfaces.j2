@@ -1,0 +1,26 @@
+{% if host['data']['interfaces'] is defined %}
+{% for interfaces_item in host['data']['interfaces'] %}
+{% if interfaces_item['int_name'] is defined %}
+interface {{ interfaces_item['int_name'] }}
+{% if interfaces_item['vlan_id'] is defined %}
+encapsulation dot1Q {{ interfaces_item['vlan_id'] }}
+{% if interfaces_item['secondary_ip_address'] is defined %}
+standby {{ interfaces_item['vlan_id'] }} ip {{ interfaces_item['secondary_ip_address'] }}
+{% if interfaces_item['priority'] is defined %}
+standby {{ interfaces_item['vlan_id'] }} priority {{ interfaces_item['priority'] }}
+{% else %}
+standby {{ interfaces_item['vlan_id'] }} priority 100
+{% endif %}
+standby {{ interfaces_item['vlan_id'] }} preempt
+{% endif %}
+{% endif %}
+{% if interfaces_item['vrf_forwarding'] is defined %}
+vrf forwarding {{ interfaces_item['vrf_forwarding'] }}
+{% endif %}
+{% if interfaces_item['ip_address'] is defined %}
+ip address {{ interfaces_item['ip_address'] }}
+{% endif %}
+no shutdown
+{% endif %}
+{% endfor %}
+{% endif %}
