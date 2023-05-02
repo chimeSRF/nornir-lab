@@ -1,44 +1,67 @@
 from nornir import InitNornir
-from getpass import getpass
-from nornir_netmiko import netmiko_send_config
-from nornir_utils.plugins.functions import print_result
-import yaml
+from nornir_napalm.plugins.tasks import napalm_configure
+from nornir_jinja2.plugins.tasks import template_file
+from nornir_utils.plugins.functions import print_title, print_result
 
-def configure_vrf(task, vrf):
-    vrf_config = [
-        f"vrf definition {vrf['name']}",
-        f"  rd {vrf['id']}:0",
-        f"  route-target export {vrf['route_export'][0]}",
-        f"  route-target import {vrf['route_import'][0]}",
-        "  address-family ipv4",
-        "    exit-address-family",
-        "  exit",
-    ]
+nr = InitNornir(config_file="config.yaml", dry_run=True)
 
-    commands = "\n".join(vrf_config)
-    result = task.run(
-        task=netmiko_send_config,
-        config_commands=commands,
-    )
-    return result
+def vrf_configuration(task):
+    # Transform inventory data to configuration via a template file
+    r = task.run(task=template_file,
+                 name="VRF Configuration",
+                 template="vrf.j2",
+                 path=f"templates/")
 
-def main():
-    nr = InitNornir(config_file="config.yaml")
-    nr.inventory.defaults.password = getpass("Password: ")
+    # Save the compiled configuration into a host variable
+    task.host["config"] = r.result
 
-    with open("services.yaml", "r") as file:
-        services = yaml.safe_load(file)["services"]
+    # Deploy that configuration to the device using NAPALM
+    task.run(task=napalm_configure,
+             name="Loading VRF Configurations on the device",
+             replace=False,
+             configuration=task.host["config"])
 
-    for service in services:
-        vrf = {
-            "name": service["name"],
-            "id": service["id"],
-            "route_import": service["route_import"],
-            "route_export": service["route_export"],
-        }
+def interface_configuration(task):
+    # Transform inventory data to configuration via a template file
+    r = task.run(task=template_file,
+                 name="Interface Configuration",
+                 template="interfaces.j2",
+                 path=f"templates/")
 
-        task = nr.run(task=configure_vrf, vrf=vrf)
-        print_result(task)
+    # Save the compiled configuration into a host variable
+    task.host["config"] = r.result
 
-if __name__ == "__main__":
-    main()
+    # Deploy that configuration to the device using NAPALM
+    if task.host["config"]:
+        task.run(task=napalm_configure,
+                name="Loading Interface Configurations on the device",
+                replace=False,
+                configuration=task.host["config"])
+
+def bgp_configuration(task):
+    # Transform inventory data to configuration via a template file
+    r = task.run(task=template_file,
+                 name="BGP Configuration",
+                 template="bgp.j2",
+                 path=f"templates/")
+
+    # Save the compiled configuration into a host variable
+    task.host["config"] = r.result
+
+    # Deploy that configuration to the device using NAPALM
+    if task.host["config"]:
+        task.run(task=napalm_configure,
+                name="Loading Interface Configurations on the device",
+                replace=False,
+                configuration=task.host["config"])
+
+nr.data.dry_run = False
+print_title("RUNNING VRF CONFIGURATIONS")
+vrf_result = nr.run(task=vrf_configuration)
+print_result(vrf_result)
+print_title("RUNNING INTERFACE CONFIGURATIONS")
+interface_result = nr.run(task=interface_configuration)
+print_result(interface_result)
+print_title("RUNNING BGP CONFIGURATIONS")
+bgp_result = nr.run(task=bgp_configuration)
+print_result(bgp_result)
