@@ -1,8 +1,8 @@
 # Nornir Lab Net Aut
 This repository contains a network automation project using Nornir and Jinja2 to configure various network devices. The project automates the configuration of VRFs, interfaces, and BGP across multiple network devices.
 
-## TODOs
-- Currently not editing vrfs (delete not implemented)
+## Information
+The script works best on a clean setup, to update existing information you first have to delete them.
 
 ## Table of Contents
 [Initial Setup](#initial-setup) \
